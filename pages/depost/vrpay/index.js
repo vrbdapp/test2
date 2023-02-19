@@ -11,6 +11,7 @@ import Web3 from 'web3';
 import { useRouter } from 'next/router';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useSWR from 'swr'
 
 
 function DashboardTasks() {
@@ -23,6 +24,10 @@ function DashboardTasks() {
   const [datas, setDatas] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [gotDepositVusd, setGotDepositVusd] = useState("")
+
+
+  const [page, setPage] = useState(1)
+  const [pageCount, setPageCount] = useState(1)
 
 
 
@@ -161,10 +166,6 @@ function DashboardTasks() {
   }, [])
 
 
-
-
-
-
   useEffect(() => {
 
     const getUserS = sessionStorage.getItem("jwt")
@@ -200,15 +201,34 @@ function DashboardTasks() {
 
   useEffect(() => {
 
+
+
+
+   
+
+
+    getData()
+
+
+
+
+
+  }, [])
+
+
+  const getData = (num) =>{
+
+
     const datas = sessionStorage.getItem("jwt")
     const parseData = JSON.parse(datas)
 
-    axios.post("/api/MyRecords/findMyDeposits", {
+    axios.post(`/api/MyRecords/findMyDeposits?page=${num?num:page}`, {
       id: parseData.datam._id
     })
       .then((acc) => {
-        // console.log(acc.data)
+        console.log(acc.data)
         setDatas(acc.data)
+        setPageCount(acc.data.pageCount)
 
       })
       .catch((err) => {
@@ -217,7 +237,9 @@ function DashboardTasks() {
 
 
 
-  }, [])
+
+
+  }
 
 
 
@@ -240,6 +262,53 @@ function DashboardTasks() {
 
 
   }
+
+
+
+
+
+
+
+  
+const handlePrevious = () =>{
+
+  // if (page === 1) {
+  //   return 
+  // }else{
+    setPage(page-1)
+    getData(page-1)
+  // }
+  
+  }
+  
+  
+  
+  const handleNext = () =>{
+  
+  
+  
+    // // if (6 === 5) {
+    // if (page === pageCount) {
+    //   return
+    // }else{
+      setPage(page+1)
+      getData(page+1)
+    // }
+  
+  
+  
+    
+  
+  
+  }
+  
+  
+
+
+
+
+
+
 
 
   return (
@@ -499,7 +568,7 @@ style={{
   </thead>
   <tbody>
     {
-      datas && datas.map((hit, index) => {
+      datas && datas.findData.map((hit, index) => {
 
         return <tr key={hit._id}>
           <th style={{ color: "white" }} scope="row">{index + 1}</th>
@@ -513,6 +582,37 @@ style={{
 
   </tbody>
 </table>
+
+
+
+<div className='container' style={{marginTop:50}}>
+
+  <div className='row'>
+
+    <div className='col-6'>
+      <button disabled={page === 1} onClick={handlePrevious} className='btn btn-primary'>PREVIEW</button>
+    </div>
+    <div className='col-6'>
+      <div style={{textAlign:"right"}} className='text-right'>
+      <button onClick={handleNext} disabled={page === pageCount} className='btn btn-primary'>NEXT</button>
+      </div>
+    </div>
+
+
+
+
+
+
+
+  </div>
+
+
+
+
+
+  
+</div>
+
 
 
 
@@ -532,6 +632,15 @@ style={{
 
 
 </div>
+
+
+
+
+
+
+
+
+
 
 }
 

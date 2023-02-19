@@ -20,11 +20,38 @@ function DashboardTasks() {
   const [mainLaykaValue, setMainLaykaValue] = useState("")
   const [data, setData] = useState("")
 
+
+  
+  const [page, setPage] = useState(1)
+  const [pageCount, setPageCount] = useState(1)
+
+
+
+
+
+
+
+
   const router = useRouter();
 
 
 
   useEffect(() => {
+
+
+
+    getData()
+    
+  
+   
+  }, [])
+
+
+  const getData = (num) =>{
+      
+    
+    
+    
     const data = sessionStorage.getItem('jwt');
 
     const parser = JSON.parse(data);
@@ -36,12 +63,14 @@ function DashboardTasks() {
     try {
       
 
-      axios.post("/api/MyRecordsData/DailyRoi",{
+      axios.post(`/api/MyRecordsData/DailyRoi?page=${num?num:page}`,{
         id:parser.datam._id
       })
       .then((acc)=>{
         console.log(acc.data)
         setData(acc.data)
+        setPageCount(acc.data.pageCount)
+
       })
       .catch((err)=>{
         console.log(err)
@@ -50,10 +79,8 @@ function DashboardTasks() {
     } catch (error) {
       console.log(error)
     }
-    
-  
-   
-  }, [])
+
+  }
   
 
 
@@ -128,6 +155,40 @@ function DashboardTasks() {
   ]
 
 
+
+  const handlePrevious = () =>{
+
+    // if (page === 1) {
+    //   return 
+    // }else{
+      setPage(page-1)
+      getData(page-1)
+    // }
+    
+    }
+    
+    
+    
+    const handleNext = () =>{
+    
+    
+    
+      // // if (6 === 5) {
+      // if (page === pageCount) {
+      //   return
+      // }else{
+        setPage(page+1)
+        getData(page+1)
+      // }
+    
+    
+    
+      
+    
+    
+    }
+
+
   return (
     <>
       <Head>
@@ -153,12 +214,13 @@ function DashboardTasks() {
       {/* <th style={{ color: "white" }} scope="col">Package</th> */}
       <th style={{ color: "white" }} scope="col">Date</th>
      
+
     </tr>
   </thead>
   <tbody>
 
     {
-     data&& data.map((hit, index) => {
+     data&& data.findMyPackage.map((hit, index) => {
         return <tr key={hit.key}>
           <th style={{ color: "white" }} scope="row">{index + 1}</th>
           {/* <td style={{ color: "white" }}>{hit.StepsWalked}</td> */}
@@ -173,6 +235,42 @@ function DashboardTasks() {
 
   </tbody>
 </table>
+
+
+
+
+<div className='container' style={{marginTop:50}}>
+
+  <div className='row'>
+
+    <div className='col-6'>
+      <button disabled={page === 1} onClick={handlePrevious} className='btn btn-primary'>PREVIEW</button>
+    </div>
+    <div className='col-6'>
+      <div style={{textAlign:"right"}} className='text-right'>
+      <button onClick={handleNext} disabled={page === pageCount} className='btn btn-primary'>NEXT</button>
+      </div>
+    </div>
+
+
+
+
+
+
+
+  </div>
+
+
+
+
+
+  
+</div>
+
+
+
+
+
 
 
 

@@ -154,9 +154,22 @@ function DashboardTasks() {
 
       <Container maxWidth="lg">
 
-        <h2 style={{ marginTop: 35 }}>No Data Found</h2>
+    
 
 
+    <div className='container'>
+
+      <div className='row'>
+
+        <div className='col'>
+          <div className='text-left mt-5'>
+          <img  src='/bannerss.png' className='img-fluid' style={{width:300,height:300}}   />
+          </div>
+        </div>
+
+      </div>
+
+    </div>
 
    
 

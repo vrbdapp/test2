@@ -25,12 +25,19 @@ function DashboardTasks() {
   const [gotDepositVusd, setGotDepositVusd] = useState("")
 
 
-  const [avalibleBalance, setAvalibleBalance] = useState("")
 
+  const [avalibleBalance, setAvalibleBalance] = useState("")
+ 
 
   const [withdrawableTokens, setWithdrawableTokens] = useState("")
 
   const [tillWithdrawed, setTillWithdrawed] = useState("")
+
+
+  
+  const [page, setPage] = useState(1)
+  const [pageCount, setPageCount] = useState(1)
+
 
 
 
@@ -66,6 +73,24 @@ function DashboardTasks() {
 
 
   const handleWithdraw = () => {
+
+
+
+    if (withdrawableTokens < 25) {
+      return  toast.error('Minimum Withdrawal Is 25 VUSD', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
+    }
+
+
+
     // setIsLoading(true)
     console.log('hello');
     const val = sessionStorage.getItem('jwt');
@@ -242,10 +267,18 @@ function DashboardTasks() {
 
   useEffect(() => {
 
+    getData()
+
+  }, [])
+
+
+
+  const getData = (num) =>{
+
     const datas = sessionStorage.getItem("jwt")
     const parseData = JSON.parse(datas)
 
-    axios.post("/api/MyRecords/findMyWithdraw", {
+    axios.post(`/api/MyRecords/findMyWithdraw?page=${num?num:page}`, {
       id: parseData.datam._id
     })
       .then((acc) => {
@@ -256,10 +289,56 @@ function DashboardTasks() {
       .catch((err) => {
         console.log(err)
       })
+    
+
+    }
 
 
 
-  }, [])
+
+
+      
+const handlePrevious = () =>{
+
+  // if (page === 1) {
+  //   return 
+  // }else{
+    setPage(page-1)
+    getData(page-1)
+  // }
+  
+  }
+  
+  
+  
+  const handleNext = () =>{
+  
+  
+  
+    // // if (6 === 5) {
+    // if (page === pageCount) {
+    //   return
+    // }else{
+      setPage(page+1)
+      getData(page+1)
+    // }
+  
+  
+  
+    
+  
+  
+  }
+  
+  
+
+
+
+
+
+
+
+
 
 
   useEffect(() => {
@@ -644,7 +723,7 @@ Withdrawal fee : 10%</p>
     </tr>
   </thead>
   <tbody>
-    {datas && datas.map((hit, index) => {
+    {datas && datas.findData.map((hit, index) => {
       return <tr key={hit._id}>
         <th style={{ color: "white" }} scope="row">{index + 1}</th>
         <td style={{ color: "white" }}>{hit.WithdrawAmount}</td>

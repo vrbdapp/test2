@@ -6,7 +6,7 @@ function initDB(){
         return
     }
 
-    mongoose.connect("mongodb+srv://vrblocks:Hv5T0JXBDQ1Wqu1E@cluster0.yfpt4.mongodb.net/?retryWrites=true&w=majority",{
+    mongoose.connect("mongodb+srv://myfunblockchain:suraj@cluster0.poisi4a.mongodb.net/?retryWrites=true&w=majority",{
         useNewUrlParser : true,
         useUnifiedTopology:true
 
