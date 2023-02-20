@@ -8,7 +8,7 @@ export default async (req, res) => {
   const { id } = req.body;
 
 
-  const ITEMS_PER_PAGE = 5;
+  const ITEMS_PER_PAGE = 25;
 
   const page = req.query.page || 1;
 

@@ -12,7 +12,7 @@ export default async (req, res) => {
 
   console.log(removespace)
 
-  const findData = await LevelDailyRoi.find({LevelEarned:removespace,ROIOwner:id})
+  const findData = await LevelDailyRoi.find({LevelEarned:removespace,ROIOwner:id}).sort({_id:-1}) 
 
   res.json(findData)
 };
