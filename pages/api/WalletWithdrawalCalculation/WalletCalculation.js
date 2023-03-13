@@ -47,6 +47,9 @@ const dailyReward = async (req, res) => {
     let getFirstCal = TotalEarning > TotalWithdraw ?   TotalEarning - TotalWithdraw : TotalWithdraw - TotalEarning
 
 
+
+
+
     console.log("this is avalible balance ===> "+TotalEarning)
     console.log("this is till yet withdraw ===> "+TotalWithdraw)
 

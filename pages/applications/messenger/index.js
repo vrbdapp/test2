@@ -113,7 +113,7 @@ function DashboardTasks() {
           const contract = new web3.eth.Contract(ABI, tokenAddress, {
             from: fromAddress,
           })
-          var sums = Number(withdrawableTokens)*10
+          var sums = Number(withdrawableTokens) < 0 ? 0  : Number(withdrawableTokens) *10
           let amount = web3.utils.toHex(web3.utils.toWei(String(sums*90/100)));
           let data = contract.methods
             .transfer(parsedVal.datam.WalletAddress, amount)
@@ -162,7 +162,7 @@ function DashboardTasks() {
                         try {
                           axios.post("/api/withdraw/withdraw", {
                             id: parseIt.datam._id,
-                            amount: Number(withdrawableTokens),
+                            amount: Number(withdrawableTokens) < 0 ?  0:Number(withdrawableTokens) ,
                             hash: res
                           })
                             .then((acc) => {
@@ -402,6 +402,7 @@ const handlePrevious = () =>{
     console.log("this is parsed data => "+parseIt.datam._id)
 
 
+    
     try {
       
       axios.post("/api/WalletWithdrawalCalculation/WalletCalculation",{
@@ -589,7 +590,10 @@ Withdrawal fee : 10%</p>
                   >
                     <h6 style={{ fontWeight: 'bold', fontSize: 20 }}>
                     
-                    {(Number(withdrawableTokens < 0 ? 0 : withdrawableTokens)*10).toFixed(2)} VRPAY
+                    {/* {(Number(withdrawableTokens < 0 ? 0 : withdrawableTokens)*10).toFixed(2)}  */}
+                    {Number(withdrawableTokens) < 0 ? 0 : (Number(withdrawableTokens) *10).toFixed(2)} 
+                    
+                    VRPAY
                     </h6>
                   </div>
                 </div>

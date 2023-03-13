@@ -293,7 +293,7 @@ export default async (req, res) => {
     "Total_Withdrawal": err,
     "Lap_Wallet":lpp,
     "Rank_Eigible":parseIt ? parseIt : "Ineligible",
-    "Real_Availible":Number(brr) + Number(crr) + Number(krr) - Number(err)
+    "Real_Availible":Number(brr) + Number(crr) - Number(err)
   })
 };
 

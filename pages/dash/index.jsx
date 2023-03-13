@@ -255,7 +255,8 @@ Daily ROI : <a style={{ color: "yellow" }}>0.5%</a>
                     <h6 style={{  fontSize: 20 }}>
                     Available Balance
                     </h6>
-                    <h6 style={{ color: "yellow" }}>{Number(data.Real_Availible).toFixed(2)}</h6>
+                    {/* <h6 style={{ color: "yellow" }}>{Number(data.Real_Availible).toFixed(2)}</h6> */}
+                    <h6 style={{ color: "yellow" }}>{Number(data.Real_Availible) < 0 ? 0 :Number(data.Real_Availible).toFixed(2)}</h6>
                   </div>
                 </div>
                 <div className="col-sm-3">
