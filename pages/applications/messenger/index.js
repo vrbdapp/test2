@@ -589,7 +589,7 @@ Withdrawal fee : 10%</p>
                   >
                     <h6 style={{ fontWeight: 'bold', fontSize: 20 }}>
                     
-                    {(Number(withdrawableTokens)*10).toFixed(2)} VRPAY
+                    {(Number(withdrawableTokens < 0 ? 0 : withdrawableTokens)*10).toFixed(2)} VRPAY
                     </h6>
                   </div>
                 </div>
