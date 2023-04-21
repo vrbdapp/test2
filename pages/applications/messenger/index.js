@@ -10,7 +10,7 @@ import ABI from '../../../src/Web3Resources/ABI';
 import Web3 from 'web3';
 import { useRouter } from 'next/router';
 import { ToastContainer, toast } from 'react-toastify';
-  import 'react-toastify/dist/ReactToastify.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function DashboardTasks() {
@@ -23,18 +23,21 @@ function DashboardTasks() {
   const [datas, setDatas] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [gotDepositVusd, setGotDepositVusd] = useState("")
+  const [myWithdrawal, setMyWithdrawal] = useState("")
 
 
 
   const [avalibleBalance, setAvalibleBalance] = useState("")
- 
+
 
   const [withdrawableTokens, setWithdrawableTokens] = useState("")
 
   const [tillWithdrawed, setTillWithdrawed] = useState("")
+  const [CanShowData, setCanShowData] = useState(false)
 
 
-  
+
+
   const [page, setPage] = useState(1)
   const [pageCount, setPageCount] = useState(1)
 
@@ -49,25 +52,6 @@ function DashboardTasks() {
     const parseIt = JSON.parse(datas)
 
 
-    // if(window.ethereum){
-
-    //   window.ethereum.request({method:'eth_requestAccounts'})
-    //   .then(res=>{
-    //           // Return the address of the wallet
-    //         console.log(res[0])
-    //         console.log(parseIt.WalletAddress)
-
-    //         if (parseIt.WalletAddress !== res[0]) {
-    //           sessionStorage.clear()
-    //           router.push("/")
-    //         }
-
-
-    //   })
-    // }else{
-    //   alert("install metamask extension!!")
-    // }
-
 
   }, [])
 
@@ -77,7 +61,7 @@ function DashboardTasks() {
 
 
     if (withdrawableTokens < 25) {
-      return  toast.error('Minimum Withdrawal Is 25 VUSD', {
+      return toast.error('Minimum Withdrawal Is 25 VUSD', {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -86,7 +70,7 @@ function DashboardTasks() {
         draggable: true,
         progress: undefined,
         theme: "light",
-        });
+      });
     }
 
 
@@ -113,8 +97,8 @@ function DashboardTasks() {
           const contract = new web3.eth.Contract(ABI, tokenAddress, {
             from: fromAddress,
           })
-          var sums = Number(withdrawableTokens) < 0 ? 0  : Number(withdrawableTokens) *10
-          let amount = web3.utils.toHex(web3.utils.toWei(String(sums*90/100)));
+          var sums = Number(withdrawableTokens) < 0 ? 0 : Number(withdrawableTokens) * 10
+          let amount = web3.utils.toHex(web3.utils.toWei(String(sums * 90 / 100)));
           let data = contract.methods
             .transfer(parsedVal.datam.WalletAddress, amount)
             .encodeABI();
@@ -155,14 +139,14 @@ function DashboardTasks() {
                           draggable: true,
                           progress: undefined,
                           theme: "light",
-                          });
+                        });
 
 
 
                         try {
                           axios.post("/api/withdraw/withdraw", {
                             id: parseIt.datam._id,
-                            amount: Number(withdrawableTokens) < 0 ?  0:Number(withdrawableTokens) ,
+                            amount: Number(withdrawableTokens) < 0 ? 0 : Number(withdrawableTokens),
                             hash: res
                           })
                             .then((acc) => {
@@ -171,17 +155,17 @@ function DashboardTasks() {
                             })
                             .catch((err) => {
                               console.log(err)
-                              
-                          toast.error('Something Went Wrong.', {
-                            position: "top-right",
-                            autoClose: 5000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: "light",
-                            });
+
+                              toast.error('Something Went Wrong.', {
+                                position: "top-right",
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: "light",
+                              });
 
                             })
                         } catch (error) {
@@ -197,7 +181,7 @@ function DashboardTasks() {
                             draggable: true,
                             progress: undefined,
                             theme: "light",
-                            });
+                          });
 
 
 
@@ -236,7 +220,7 @@ function DashboardTasks() {
 
 
 
-      
+
       toast.error('install metamask extension!!', {
         position: "top-right",
         autoClose: 5000,
@@ -246,7 +230,7 @@ function DashboardTasks() {
         draggable: true,
         progress: undefined,
         theme: "light",
-        });
+      });
 
 
 
@@ -273,12 +257,12 @@ function DashboardTasks() {
 
 
 
-  const getData = (num) =>{
+  const getData = (num) => {
 
     const datas = sessionStorage.getItem("jwt")
     const parseData = JSON.parse(datas)
 
-    axios.post(`/api/MyRecords/findMyWithdraw?page=${num?num:page}`, {
+    axios.post(`/api/MyRecords/findMyWithdraw?page=${num ? num : page}`, {
       id: parseData.datam._id
     })
       .then((acc) => {
@@ -289,48 +273,48 @@ function DashboardTasks() {
       .catch((err) => {
         console.log(err)
       })
-    
-
-    }
 
 
-
-
-
-      
-const handlePrevious = () =>{
-
-  // if (page === 1) {
-  //   return 
-  // }else{
-    setPage(page-1)
-    getData(page-1)
-  // }
-  
   }
-  
-  
-  
-  const handleNext = () =>{
-  
-  
-  
+
+
+
+
+
+
+  const handlePrevious = () => {
+
+    // if (page === 1) {
+    //   return 
+    // }else{
+    setPage(page - 1)
+    getData(page - 1)
+    // }
+
+  }
+
+
+
+  const handleNext = () => {
+
+
+
     // // if (6 === 5) {
     // if (page === pageCount) {
     //   return
     // }else{
-      setPage(page+1)
-      getData(page+1)
+    setPage(page + 1)
+    getData(page + 1)
     // }
-  
-  
-  
-    
-  
-  
+
+
+
+
+
+
   }
-  
-  
+
+
 
 
 
@@ -350,16 +334,16 @@ const handlePrevious = () =>{
       id: parseData.datam._id
     })
       .then((acc) => {
-        console.log( "this is my => "+ acc.data.Total_Earned_Income)
+        console.log("this is my => " + acc.data.Total_Earned_Income)
         setAvalibleBalance(acc.data.Total_Earned_Income)
 
       })
       .catch((err) => {
         console.log(err)
       })
-  
+
   }, [])
-  
+
 
   useEffect(() => {
 
@@ -370,23 +354,23 @@ const handlePrevious = () =>{
 
 
     try {
-      
+
       axios.get(`https://vrblocksscan.io/api?module=account&action=tokenbalance&contractaddress=0x155bdd944F2f37725C15C3B99bDae28537b64054&address=${parseItNow.datam.WalletAddress}`)
-      .then((acc)=>{
-        console.log(acc.data)
-        setGotDepositVusd(acc.data.result.lenght >2 ? acc.data.result.slice(0,-18):acc.data.result)
-      })
-      .catch((err)=>{
-        console.log(err)
-      })
+        .then((acc) => {
+          console.log(acc.data)
+          setGotDepositVusd(acc.data.result.lenght > 2 ? acc.data.result.slice(0, -18) : acc.data.result)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
 
 
     } catch (error) {
       console.log(error)
     }
-    
-  
-    
+
+
+
 
 
   }, [])
@@ -397,36 +381,58 @@ const handlePrevious = () =>{
 
     const findDats = sessionStorage.getItem("jwt")
     const parseIt = JSON.parse(findDats)
-    
-
-    console.log("this is parsed data => "+parseIt.datam._id)
 
 
-    
+    console.log("this is parsed data => " + parseIt.datam._id)
+
+
+
+
     try {
-      
-      axios.post("/api/WalletWithdrawalCalculation/WalletCalculation",{
-        id:parseIt.datam._id
+
+      axios.post("/api/WalletWithdrawalCalculation/WalletCalculation", {
+        id: parseIt.datam._id
       })
-      .then((acc)=>{
-        console.log(acc.data)
-        setWithdrawableTokens(acc.data.firstData)
-        setTillWithdrawed(acc.data.totalwithdraw)
-      })
-      .catch((err)=>{
-        console.log(err)
-      })
+        .then((acc) => {
+          console.log(acc.data)
+          // setWithdrawableTokens(acc.data.firstData)
+          setTillWithdrawed(acc.data.totalwithdraw)
+          setCanShowData(true)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
 
 
 
     } catch (error) {
       console.log(error)
     }
-    
-  
-   
+
+
+
+    try {
+
+      axios.post("/api/dashboardData/dashData", {
+        id: parseIt.datam._id
+      })
+        .then((acc) => {
+          console.log(acc.data)
+          setWithdrawableTokens(Number(acc.data.Total_Earned_Income)-Number(acc.data.Total_Withdrawal))
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+
+
+
+    } catch (error) {
+      console.log(error)
+    }
+
+
   }, [])
-  
+
 
   return (
     <>
@@ -436,19 +442,19 @@ const handlePrevious = () =>{
 
 
       <ToastContainer
-position="top-right"
-autoClose={5000}
-hideProgressBar={false}
-newestOnTop={false}
-closeOnClick
-rtl={false}
-pauseOnFocusLoss
-draggable
-pauseOnHover
-theme="light"
-/>
-{/* Same as */}
-<ToastContainer />
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      {/* Same as */}
+      <ToastContainer />
 
       {
         isLoading ?
@@ -471,31 +477,31 @@ theme="light"
 
 
           <div
-style={{
-  borderColor: '#9c27b0',
-  backgroundColor: '#020e22f2',
-  borderWidth: 2,
-  borderStyle: 'solid',
-  borderRadius: 20,
-  paddingTop:25,
-  paddingBottom:25,
-  marginLeft:20,
-  marginRight:20,
-  marginTop:20
-}}
->
+            style={{
+              borderColor: '#9c27b0',
+              backgroundColor: '#020e22f2',
+              borderWidth: 2,
+              borderStyle: 'solid',
+              borderRadius: 20,
+              paddingTop: 25,
+              paddingBottom: 25,
+              marginLeft: 20,
+              marginRight: 20,
+              marginTop: 20
+            }}
+          >
 
 
 
 
 
 
-          <Container maxWidth="lg">
+            <Container maxWidth="lg">
 
-            <h2 style={{ marginTop: 35 ,textAlign:"center",marginBottom:10}}>Withdraw VR PAY</h2>
-            {/* <h5 style={{ marginTop: 35 ,textAlign:"right",marginBottom:10}}>Avalible Balance : {avalibleBalance}</h5> */}
+              <h2 style={{ marginTop: 35, textAlign: "center", marginBottom: 10 }}>Withdraw VR PAY</h2>
+              {/* <h5 style={{ marginTop: 35 ,textAlign:"right",marginBottom:10}}>Avalible Balance : {avalibleBalance}</h5> */}
 
-            {/* <TextField
+              {/* <TextField
               onChange={(e) => {
                 setInput(e.target.value);
               }}
@@ -506,31 +512,31 @@ style={{
 
 
 
-            <h4 className='text-center'>{Number(withdrawableTokens).toFixed(2)} VUSD</h4>
+              <h4 className='text-center'>{Number(withdrawableTokens).toFixed(2)} VUSD</h4>
 
-            <div style={{ textAlign: 'center', marginTop: 30 }}>
-              {
-                wallete == "null" ?
-                  <>
-                    <Button
-                      onClick={() => setShowWall(true)}
-                      style={{ padding: 10 }}
-                      variant="outlined"
-                      size="small"
-                    >
-                      Add Wallete Address
-                    </Button>
+              <div style={{ textAlign: 'center', marginTop: 30 }}>
+                {
+                  wallete == "null" ?
+                    <>
+                      <Button
+                        onClick={() => setShowWall(true)}
+                        style={{ padding: 10 }}
+                        variant="outlined"
+                        size="small"
+                      >
+                        Add Wallete Address
+                      </Button>
 
-                  </>
+                    </>
 
 
 
-                  :
+                    :
 
-                  <>
-                  
-                  
-{/* 
+                    <>
+
+
+                      {/* 
                   <Button
                     onClick={handleWithdraw}
                     style={{ padding: 10 }}
@@ -542,105 +548,111 @@ style={{
 
 
 
-                  <p className='container'>Minimum withdraw 25 VUSD. Max withdraw = 3X DEPOSIT AMOUNT
-Withdrawal fee : 10%</p>
+                      <p className='container'>Minimum withdraw 25 VUSD. Max withdraw = 3X DEPOSIT AMOUNT
+                        Withdrawal fee : 10%</p>
+
+                      {
+                        CanShowData ?
+                          <>
+                            {
+                              withdrawableTokens > 0 ?
+
+                                <div style={{ cursor: "pointer" }} onClick={handleWithdraw}>
+                                  <img src='/btnImage.png' style={{ width: "90px", height: "50px" }} />
+
+                                  <h6 style={{ marginTop: -35, color: "black", fontWeight: "bold" }}>Withdraw</h6>
+                                </div>
+
+                                :
+                                <div style={{ cursor: "pointer" }} onClick={() => alert("0 Cannot Be Withdraw")}>
+                                  <img src='/btnImage.png' style={{ width: "90px", height: "50px" }} />
+
+                                  <h6 style={{ marginTop: -35, color: "black", fontWeight: "bold" }}>Withdraw</h6>
+                                </div>
 
 
-                    
-                  <>
-                  {
-                     withdrawableTokens > 0? 
-
-<div style={{cursor:"pointer"}}  onClick={handleWithdraw}>
-<img src='/btnImage.png' style={{width:"90px",height:"50px"}} />
-
-<h6 style={{marginTop:-35,color:"black",fontWeight:"bold"}}>Withdraw</h6>
-                    </div>
-
-                    :
-<div style={{cursor:"pointer"}}  onClick={()=>alert("0 Cannot Be Withdraw")}>
-<img src='/btnImage.png' style={{width:"90px",height:"50px"}} />
-
-<h6 style={{marginTop:-35,color:"black",fontWeight:"bold"}}>Withdraw</h6>
-                    </div>
-
-
-                  }
-
-
-
-
-
-                    <div className='row mt-5'>
-
-
-                    <div className="col">
-                  <div
-                    style={{
-                      backgroundImage: `url("/intro-bg.png.png")`,
-                      backgroundColor: '#020e22f2',
-                      padding: 20,
-                      margin: 10,
-                      borderColor: '#ffffff66f',
-                      borderWidth: 1,
-                      borderStyle: 'solid',
-                      borderRadius: 10,
-                      textAlign: 'center'
-                    }}
-                  >
-                    <h6 style={{ fontWeight: 'bold', fontSize: 20 }}>
-                    
-                    {/* {(Number(withdrawableTokens < 0 ? 0 : withdrawableTokens)*10).toFixed(2)}  */}
-                    {Number(withdrawableTokens) < 0 ? 0 : (Number(withdrawableTokens) *10).toFixed(2)} 
-                    
-                    VRPAY
-                    </h6>
-                  </div>
-                </div>
-                      <div className='col'>
-
-{/* <h5 className='text-center mt-5' style={{fontWeight:"bolder"}}>{input} X 10 = {input*10}</h5> */}
-<div className="col">
-                  <div
-                    style={{
-                      backgroundImage: `url("/intro-bg.png.png")`,
-                      backgroundColor: '#020e22f2',
-                      padding: 20,
-                      margin: 10,
-                      borderColor: '#ffffff66f',
-                      borderWidth: 1,
-                      borderStyle: 'solid',
-                      borderRadius: 10,
-                      textAlign: 'center'
-                    }}
-                  >
-                    <h6 style={{ fontWeight: 'bold', fontSize: 20 }}>
-                    
-                    Total Withdrawal : {tillWithdrawed}
-                    </h6>
-                  </div>
-                </div>
-                      </div>
+                            }
 
 
 
 
-                    </div>
+
+                            <div className='row mt-5'>
+
+
+                              <div className="col">
+                                <div
+                                  style={{
+                                    backgroundImage: `url("/intro-bg.png.png")`,
+                                    backgroundColor: '#020e22f2',
+                                    padding: 20,
+                                    margin: 10,
+                                    borderColor: '#ffffff66f',
+                                    borderWidth: 1,
+                                    borderStyle: 'solid',
+                                    borderRadius: 10,
+                                    textAlign: 'center'
+                                  }}
+                                >
+                                  <h6 style={{ fontWeight: 'bold', fontSize: 20 }}>
+
+                                    {/* {(Number(withdrawableTokens < 0 ? 0 : withdrawableTokens)*10).toFixed(2)}  */}
+                                    {Number(withdrawableTokens) < 0 ? 0 : (Number(withdrawableTokens) * 10).toFixed(2)}
+
+                                    VRPAY
+                                  </h6>
+                                </div>
+                              </div>
+                              <div className='col'>
+
+                                {/* <h5 className='text-center mt-5' style={{fontWeight:"bolder"}}>{input} X 10 = {input*10}</h5> */}
+                                <div className="col">
+                                  <div
+                                    style={{
+                                      backgroundImage: `url("/intro-bg.png.png")`,
+                                      backgroundColor: '#020e22f2',
+                                      padding: 20,
+                                      margin: 10,
+                                      borderColor: '#ffffff66f',
+                                      borderWidth: 1,
+                                      borderStyle: 'solid',
+                                      borderRadius: 10,
+                                      textAlign: 'center'
+                                    }}
+                                  >
+                                    <h6 style={{ fontWeight: 'bold', fontSize: 20 }}>
+
+                                      Total Withdrawal : {tillWithdrawed}
+                                    </h6>
+                                  </div>
+                                </div>
+                              </div>
 
 
 
 
-                      </>
+                            </div>
+
+
+
+
+                          </>
+
+                          :
+
+                          <></>
+
+
+                      }
+
 
 
 
 
                     </>
-              }
+                }
 
-            </div>
-
-
+              </div>
 
 
 
@@ -652,19 +664,9 @@ Withdrawal fee : 10%</p>
 
 
 
-            {/* <CurrentWallete fetchData={fetchData} /> */}
 
 
-
-
-
-
-
-
-
-
-
-          
+              {/* <CurrentWallete fetchData={fetchData} /> */}
 
 
 
@@ -684,10 +686,22 @@ Withdrawal fee : 10%</p>
 
 
 
-          </Container>
 
 
-</div>
+
+
+
+
+
+
+
+
+
+
+            </Container>
+
+
+          </div>
 
 
       }
@@ -695,55 +709,52 @@ Withdrawal fee : 10%</p>
 
 
       {
-        isLoading ? 
+        isLoading ?
 
 
-      <></>
+          <></>
 
 
-        :
+          :
 
 
-        <div style={{marginLeft:20,marginRight:20,marginTop:5}}>
+          <div style={{ marginLeft: 20, marginRight: 20, marginTop: 5 }}>
 
 
-<div style={{ marginTop: 50 }}>
-
-
-
-<h4 style={{ fontWeight: "bold" }}>Withdraw History</h4>
+            <div style={{ marginTop: 50 }}>
 
 
 
-
-<table className="table">
-  <thead>
-    <tr>
-      <th style={{ color: "white" }} scope="col">S.N.</th>
-      <th style={{ color: "white" }} scope="col">Withdraw VUSD</th>
-      <th style={{ color: "white" }} scope="col">Withdraw VRPAY</th>
-      <th style={{ color: "white" }} scope="col">Date</th>
-      <th style={{ color: "white" }} scope="col">HASH</th>
-    </tr>
-  </thead>
-  <tbody>
-    {datas && datas.findData.map((hit, index) => {
-      return <tr key={hit._id}>
-        <th style={{ color: "white" }} scope="row">{index + 1}</th>
-        <td style={{ color: "white" }}>{hit.WithdrawAmount}</td>
-        <td style={{ color: "white" }}>{hit.WithdrawAmount*10}</td>
-        <td style={{ color: "white" }}>{String(new Date(hit.createdAt))}</td>
-        <td style={{ color: "white" }}><a target="__blank" href={`https://vrblocksscan.io/tx/${hit.TransactionHash}`}><button className='btn btn-primary'>HASH</button></a></td>
-      </tr>
-    })
-    }
-
-
-  </tbody>
-</table>
+              <h4 style={{ fontWeight: "bold" }}>Withdraw History</h4>
 
 
 
+
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th style={{ color: "white" }} scope="col">S.N.</th>
+                    <th style={{ color: "white" }} scope="col">Withdraw VUSD</th>
+                    <th style={{ color: "white" }} scope="col">Withdraw VRPAY</th>
+                    <th style={{ color: "white" }} scope="col">Date</th>
+                    <th style={{ color: "white" }} scope="col">HASH</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {datas && datas.findData.map((hit, index) => {
+                    return <tr key={hit._id}>
+                      <th style={{ color: "white" }} scope="row">{index + 1}</th>
+                      <td style={{ color: "white" }}>{hit.WithdrawAmount}</td>
+                      <td style={{ color: "white" }}>{hit.WithdrawAmount * 10}</td>
+                      <td style={{ color: "white" }}>{String(new Date(hit.createdAt))}</td>
+                      <td style={{ color: "white" }}><a target="__blank" href={`https://vrblocksscan.io/tx/${hit.TransactionHash}`}><button className='btn btn-primary'>HASH</button></a></td>
+                    </tr>
+                  })
+                  }
+
+
+                </tbody>
+              </table>
 
 
 
@@ -759,11 +770,14 @@ Withdrawal fee : 10%</p>
 
 
 
-</div>
-        
-        
-        
-        </div>
+
+
+
+            </div>
+
+
+
+          </div>
       }
 
 

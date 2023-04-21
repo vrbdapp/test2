@@ -16,6 +16,7 @@ function DashboardTasks() {
   const [mainLaykaValue, setMainLaykaValue] = useState('');
   const [data, setData] = useState('');
   const [myRef, setMyRef] = useState('');
+  const [avalibleBalance, setAvalibleBalance] = useState("")
   const [datass, setDatass] = useState('');
 
 
@@ -57,11 +58,11 @@ function DashboardTasks() {
     // }
   }, []);
   useEffect(() => {
-    
+
     getData()
   }, [])
-  
 
+  // 
   const getData = () => {
     const getData = sessionStorage.getItem('jwt');
     console.log(getData);
@@ -79,6 +80,28 @@ function DashboardTasks() {
         .then((acc) => {
           console.log(acc.data);
           setData(acc.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+
+
+
+
+
+
+
+    try {
+      axios
+        .post('/api/WalletWithdrawalCalculation/WalletCalculation', {
+          id: parseData.datam._id
+        })
+        .then((acc) => {
+          console.log(acc.data);
+          setAvalibleBalance(acc.data.firstData);
         })
         .catch((err) => {
           console.log(err);
@@ -115,10 +138,10 @@ function DashboardTasks() {
               <h5
 
                 className="m-3"
-                
-                style={{  color: 'white' ,fontSize:15}}
+
+                style={{ color: 'white', fontSize: 15 }}
               >
-                Referral Link : <a style={{ color: "yellow" ,fontSize:15}}> https://vrbstaking.vercel.app?id={myRef.slice(0, 10)}...</a>
+                Referral Link : <a style={{ color: "yellow", fontSize: 15 }}> https://vrbstaking.vercel.app?id={myRef.slice(0, 10)}...</a>
 
 
                 <a style={{ marginLeft: 5 }}><svg xmlns="http://www.w3.org/2000/svg" width={20} height={20} fill="currentColor" className="bi bi-clipboard" viewBox="0 0 16 16">
@@ -132,44 +155,23 @@ function DashboardTasks() {
               </h5>
             </CopyToClipboard>
 
-{/* 
-            xs: 0,
-  sm: 576px,
-  md: 768px,
-  lg: 992px,
-  xl: 1200px,
-  xxl: 1400px */}
-
-
-{/* 
+          
             <h5
 
-              className="text-center mt-3"
-              style={{  color: 'white' }}
+              className=" m-3"
+              style={{ color: 'white', fontSize: 15 }}
             >
-              Contract Link :<a className='xs:0 sm:576px lg:992px xl:1200px xxl: 1400px' style={{ color: "yellow" }}> 0xEE9...KH78</a>
+              Daily ROI : <a style={{ color: "yellow" }}>0.5%</a>
 
-
-
-
-            </h5> */}
-
-<h5
-
-className=" m-3"
-style={{  color: 'white' ,fontSize:15}}
->
-Daily ROI : <a style={{ color: "yellow" }}>0.5%</a>
-
-</h5>
+            </h5>
 
 
             <h5
 
               className=" m-3"
-              style={{  color: 'white' ,fontSize:15}}
+              style={{ color: 'white', fontSize: 15 }}
             >
-              Rank : <a style={{ color: "yellow" }}>{Number(data.Totan_Direct_Number) == 0 ? "No Rank" : Number(data.Totan_Direct_Number) > 50 ? "Diamond Star"  : "Gold Star"}</a>
+              Rank : <a style={{ color: "yellow" }}>{Number(data.Totan_Direct_Number) == 0 ? "No Rank" : Number(data.Totan_Direct_Number) > 50 ? "Diamond Star" : "Gold Star"}</a>
 
             </h5>
 
@@ -210,7 +212,7 @@ Daily ROI : <a style={{ color: "yellow" }}>0.5%</a>
                       // background: url(/intro-bg.png.png)
                     }}
                   >
-                    <h6 style={{  fontSize: 20 }}>
+                    <h6 style={{ fontSize: 20 }}>
                       Staking Reward
                     </h6>
                     <h6 style={{ color: "yellow" }}>{Number(data.Total_Staking).toFixed(2)}</h6>
@@ -230,13 +232,12 @@ Daily ROI : <a style={{ color: "yellow" }}>0.5%</a>
                       textAlign: 'center'
                     }}
                   >
-                    <h6 style={{  fontSize: 20 }}>
+                    <h6 style={{ fontSize: 20 }}>
                       Level Reward
                     </h6>
                     <h6 style={{ color: "yellow" }}>{Number(data.Team_Roi_Level).toFixed(2)}</h6>
                   </div>
                 </div>
-                
 
                 <div className="col-sm-3">
                   <div
@@ -252,11 +253,11 @@ Daily ROI : <a style={{ color: "yellow" }}>0.5%</a>
                       textAlign: 'center'
                     }}
                   >
-                    <h6 style={{  fontSize: 20 }}>
-                    Available Balance
+                    <h6 style={{ fontSize: 20 }}>
+                      Available Balance
                     </h6>
                     {/* <h6 style={{ color: "yellow" }}>{Number(data.Real_Availible).toFixed(2)}</h6> */}
-                    <h6 style={{ color: "yellow" }}>{Number(data.Real_Availible) < 0 ? 0 :Number(data.Real_Availible).toFixed(2)}</h6>
+                    <h6 style={{ color: "yellow" }}>{data && Number(data.Total_Earned_Income) - Number(data.Total_Withdrawal)}</h6>
                   </div>
                 </div>
                 <div className="col-sm-3">
@@ -273,7 +274,7 @@ Daily ROI : <a style={{ color: "yellow" }}>0.5%</a>
                       textAlign: 'center'
                     }}
                   >
-                    <h6 style={{  fontSize: 20 }}>
+                    <h6 style={{ fontSize: 20 }}>
                       Total Staked
                     </h6>
                     <h6 style={{ color: "yellow" }}>{Number(data.Total_Deposit).toFixed(2)}</h6>
@@ -321,7 +322,7 @@ Daily ROI : <a style={{ color: "yellow" }}>0.5%</a>
                     <h6>{Number(data.Team_Busines).toFixed(2)}</h6>
                   </div>
                 </div> */}
-               
+
                 <div className="col-sm-3">
                   <div
                     style={{
@@ -336,7 +337,7 @@ Daily ROI : <a style={{ color: "yellow" }}>0.5%</a>
                       textAlign: 'center'
                     }}
                   >
-                    <h6 style={{  fontSize: 20 }}>
+                    <h6 style={{ fontSize: 20 }}>
                       Total Earned
                     </h6>
                     <h6 style={{ color: "yellow" }}>{Number(data.Total_Earned_Income).toFixed(2)}</h6>
@@ -356,7 +357,7 @@ Daily ROI : <a style={{ color: "yellow" }}>0.5%</a>
                       textAlign: 'center'
                     }}
                   >
-                    <h6 style={{  fontSize: 20 }}>
+                    <h6 style={{ fontSize: 20 }}>
                       Total Direct Number
                     </h6>
                     <h6 style={{ color: "yellow" }}>{Number(data.Totan_Direct_Number).toFixed(2)}</h6>
@@ -376,7 +377,7 @@ Daily ROI : <a style={{ color: "yellow" }}>0.5%</a>
                       textAlign: 'center'
                     }}
                   >
-                    <h6 style={{  fontSize: 20 }}>
+                    <h6 style={{ fontSize: 20 }}>
                       Total Direct Business
                     </h6>
                     <h6 style={{ color: "yellow" }}>{Number(data.Total_Direcct_Business).toFixed(2)}</h6>
@@ -397,7 +398,7 @@ Daily ROI : <a style={{ color: "yellow" }}>0.5%</a>
                       textAlign: 'center'
                     }}
                   >
-                    <h6 style={{  fontSize: 20 }}>
+                    <h6 style={{ fontSize: 20 }}>
                       Lap Income
                     </h6>
                     <h6 style={{ color: "yellow" }}>{Number(data.Lap_Wallet).toFixed(2)}</h6>
@@ -405,7 +406,7 @@ Daily ROI : <a style={{ color: "yellow" }}>0.5%</a>
                 </div>
               </div>
               <div className="row" style={{ marginTop: 2 }}>
-                
+
                 <div className="col-sm-3">
                   <div
                     style={{
@@ -420,7 +421,7 @@ Daily ROI : <a style={{ color: "yellow" }}>0.5%</a>
                       textAlign: 'center'
                     }}
                   >
-                    <h6 style={{  fontSize: 20 }}>
+                    <h6 style={{ fontSize: 20 }}>
                       Total Withdrawal
                     </h6>
                     <h6 style={{ color: "yellow" }}>{Number(data.Total_Withdrawal).toFixed(2)}</h6>
@@ -441,7 +442,7 @@ Daily ROI : <a style={{ color: "yellow" }}>0.5%</a>
                       textAlign: 'center'
                     }}
                   >
-                    <h6 style={{  fontSize: 20 }}>
+                    <h6 style={{ fontSize: 20 }}>
                       Total Team Number
                     </h6>
                     <h6 style={{ color: "yellow" }}>{Number(data.Team_Number).toFixed(2)}</h6>
@@ -462,7 +463,7 @@ Daily ROI : <a style={{ color: "yellow" }}>0.5%</a>
                       textAlign: 'center'
                     }}
                   >
-                    <h6 style={{  fontSize: 20 }}>
+                    <h6 style={{ fontSize: 20 }}>
                       Total Team Business
                     </h6>
                     <h6 style={{ color: "yellow" }}>{Number(data.Team_Busines).toFixed(2)}</h6>
@@ -471,11 +472,11 @@ Daily ROI : <a style={{ color: "yellow" }}>0.5%</a>
 
 
 
-               
 
 
 
-               
+
+
 
 
 

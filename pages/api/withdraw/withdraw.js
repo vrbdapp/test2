@@ -3,20 +3,22 @@ import WithdrawRecord from "../../../helper/Modal/Records/WithdrawRecord";
 import User from "../../../helper/Modal/User";
 import ShortRecord from "../../../helper/Modal/ShortRecord";
 import DepositRecord from "../../../helper/Modal/Records/DepositRecord";
-
-
-
-
+import Withdrawal from "../../../helper/Modal/ShortRecords/Withdrawal";
 
 initDB();
 
 export default async (req, res) => {
-  const { id,amount ,hash} = req.body;
+  const { id, amount, hash } = req.body;
+
+
+  
+  
+
 
   const getUserWallet = await User.findById(id)
 
 
-  const getPackage = await DepositRecord.find({ RecordOwner: id})
+  const getPackage = await DepositRecord.find({ RecordOwner: id })
 
 
   var totalStakedAmount = 0  // Total Staked This is This
@@ -33,7 +35,7 @@ export default async (req, res) => {
 
   let totWithdrawal = 0 // Total withdrawal is this
 
-  const findTotalWithdrawal = await WithdrawRecord.find({RecordOwner:id})
+  const findTotalWithdrawal = await WithdrawRecord.find({ RecordOwner: id })
 
 
   findTotalWithdrawal.map((hit) => {
@@ -41,17 +43,7 @@ export default async (req, res) => {
   })
 
 
-
-
-
-
-
-
-
-
-
-
-  const Find300Data = await ShortRecord.findOne({RecordOwner:id})
+  const Find300Data = await ShortRecord.findOne({ RecordOwner: id })
 
 
   if (Find300Data) {
@@ -61,12 +53,12 @@ export default async (req, res) => {
     let CareerEarnings = Find300Data.AllTimeCareerReward
     let LevelEarnings = Find300Data.AllTimeLevelBusiness
 
-    var sumss = DailyEarnings + CareerEarnings +LevelEarnings - Number(totWithdrawal) // Avalible Balance is this
-   
-    
+    var sumss = DailyEarnings + CareerEarnings + LevelEarnings - Number(totWithdrawal) // Avalible Balance is this
 
 
-  }else{
+
+
+  } else {
 
     var sumss = 0   // Avalible Balance is this
 
@@ -80,12 +72,6 @@ export default async (req, res) => {
   let WithdrawalToGet = Number(AmountPercantages) - Number(totWithdrawal)
 
 
-
-
-
-
-
-
   var WithdrawThisMuch = 0
 
   var lapsWallet = 0
@@ -94,17 +80,17 @@ export default async (req, res) => {
 
   if (WithdrawalToGet > sumss) {
 
-  lapsWallet = Number(sumss) - Number(WithdrawalToGet)
+    lapsWallet = Number(sumss) - Number(WithdrawalToGet)
 
 
 
 
 
-    
-  }else{
+
+  } else {
 
 
-    
+
 
 
 
@@ -115,38 +101,7 @@ export default async (req, res) => {
 
 
 
-
-
-
-
-
-
-console.log("laps wallet is ===> "+lapsWallet)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   var MyWallet = getUserWallet.Wallete
+  var MyWallet = getUserWallet.Wallete
 
 
 
@@ -155,21 +110,53 @@ console.log("laps wallet is ===> "+lapsWallet)
   }
 
 
-  var crWall = Number(MyWallet)-Number(amount)
+  var crWall = Number(MyWallet) - Number(amount)
 
 
-  const updateWallet = await User.findByIdAndUpdate({_id:id},{Wallete:crWall})
+  const updateWallet = await User.findByIdAndUpdate({ _id: id }, { Wallete: crWall })
+
+
+  /*
+  ! CREATING SHORT RECORD FOR TOTAL EARNING
+  */
+
+  const Find_Total_Earning_Short_Record = await Withdrawal.findOne({ RecordOwner: id })
+
+  
+
+  if (!Find_Total_Earning_Short_Record) {
+
+    
+    
+    await Withdrawal.create({
+      RecordOwner: id,
+      WithdrawAmount: Number(amount)
+    })
+    
+  } else {
+    
+    
+    await Withdrawal.findByIdAndUpdate({ _id: Find_Total_Earning_Short_Record._id }, { $inc: { WithdrawAmount: Number(amount) } })
+
+  }
+
+
+
+  /*
+    !--------------------------------------------------------------------------------
+  */
+
 
 
 
   const WithdrawRecordss = WithdrawRecord({
 
-    RecordOwner:id,
-    OldWallet:MyWallet,
-    WithdrawAmount:Number(amount),
-    Commision:"null",
-    LykaToken:"null",
-    TransactionHash:hash
+    RecordOwner: id,
+    OldWallet: MyWallet,
+    WithdrawAmount: Number(amount),
+    Commision: "null",
+    LykaToken: "null",
+    TransactionHash: hash
 
   }).save()
 
